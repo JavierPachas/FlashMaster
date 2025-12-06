@@ -29,7 +29,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="auth-page">
+    <div className="page-container auth-page">
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         {error && <p className="error-message">{error}</p>}

@@ -26,10 +26,15 @@ class DeckBase(BaseModel):
 class DeckCreate(DeckBase):
     pass
 
+class DeckUpdate(DeckBase):
+    title: Optional[str] = None
+    description: Optional[str] = None
+
 class Deck(DeckBase):
     id: int
     user_id: uuid.UUID
     cards: List[Card] = []
+    created_at: datetime # Add created_at here
 
     class Config:
         from_attributes = True

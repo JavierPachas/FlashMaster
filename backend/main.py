@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from database import SessionLocal, engine
 import models, schemas, auth
 from fastapi.middleware.cors import CORSMiddleware
+import csv
+from io import StringIO
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -102,6 +104,21 @@ def delete_deck(deck_id: int, db: Session = Depends(get_db), current_user: model
     db.commit()
     return db_deck
 
+@app.put("/decks/{deck_id}", response_model=schemas.Deck)
+def update_deck(deck_id: int, deck: schemas.DeckUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    db_deck = db.query(models.Deck).filter(models.Deck.id == deck_id, models.Deck.user_id == current_user.id).first()
+    if db_deck is None:
+        raise HTTPException(status_code=404, detail="Deck not found")
+    
+    if deck.title is not None:
+        db_deck.title = deck.title
+    if deck.description is not None:
+        db_deck.description = deck.description
+    
+    db.commit()
+    db.refresh(db_deck)
+    return db_deck
+
 @app.post("/decks/{deck_id}/cards/", response_model=schemas.Card)
 def create_card_for_deck(deck_id: int, card: schemas.CardCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     db_deck = db.query(models.Deck).filter(models.Deck.id == deck_id, models.Deck.user_id == current_user.id).first()
@@ -172,4 +189,46 @@ def review_card(card_id: int, review: schemas.Review, db: Session = Depends(get_
     db.commit()
     db.refresh(db_card)
     return db_card
+
+@app.post("/decks/{deck_id}/cards/upload", response_model=List[schemas.Card])
+async def upload_cards_csv(
+    deck_id: int,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    db_deck = db.query(models.Deck).filter(models.Deck.id == deck_id, models.Deck.user_id == current_user.id).first()
+    if db_deck is None:
+        raise HTTPException(status_code=404, detail="Deck not found or you don't have permission to access it")
+
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(status_code=400, detail="Invalid file type. Only CSV files are allowed.")
+
+    content = await file.read()
+    sio = StringIO(content.decode('utf-8'))
+    csv_reader = csv.DictReader(sio)
+    
+    created_cards = []
+    for row in csv_reader:
+        front = row.get("front")
+        back = row.get("back")
+        
+        if not front or not back:
+            raise HTTPException(status_code=400, detail="CSV must contain 'front' and 'back' columns with data.")
+        
+        db_card = models.Card(
+            front=front,
+            back=back,
+            deck_id=deck_id,
+            next_review=None, # Immediately available for study
+            interval=1
+        )
+        db.add(db_card)
+        created_cards.append(db_card)
+    
+    db.commit()
+    for card in created_cards:
+        db.refresh(card)
+        
+    return created_cards
 

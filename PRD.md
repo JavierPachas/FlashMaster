@@ -4,7 +4,7 @@
 **Version:** 1.2
 **Status:** Architecture Frozen
 **Platform:** Web Application (Responsive)
-**Last Updated:** December 5, 2025
+**Last Updated:** December 6, 2025
 
 ---
 
@@ -38,6 +38,8 @@ FlashMaster is a web-based learning application designed to optimize information
 * **FR-08:** **Add Card:** Input "Front" (Question) and "Back" (Answer) text.
 * **FR-09:** **Rich Text:** Support Markdown rendering for Bold, Italic, and Code blocks on cards.
 * **FR-10:** **Edit/Delete:** Modify card content or remove cards from a deck.
+* **FR-11:** **Edit Deck Details:** Users can modify the title and description of an existing deck.
+* **FR-12:** **Bulk Add Cards via CSV:** Users can upload a CSV file containing 'front' and 'back' columns to add multiple cards to a deck simultaneously.
 
 ### 4.4 Study Mode (The Core Loop)
 * **FR-11:** **Review Interface:** User sees the Front -> Clicks to Reveal -> Sees the Back.
@@ -60,10 +62,10 @@ The application uses client-side routing (React Router).
 
 | Route Path | Access | Component | Description |
 | :--- | :--- | :--- | :--- |
-| `/` | Public | `LandingPage` | Project intro and Call to Action. |
+| `/` | Public | `LandingPage` | Project intro and Call to Action. Redirects logged-in users to Dashboard. |
 | `/login` | Public | `LoginPage` | Auth form to get token. |
 | `/register` | Public | `RegisterPage` | Sign up form. |
-| `/dashboard` | **Private** | `Dashboard` | Grid view of user's Decks. |
+| `/dashboard` | **Private** | `Dashboard` | Grid view of user's Decks, including a "Create New Deck" card. |
 | `/create-deck` | **Private** | `CreateDeck` | Form to add a new deck. |
 | `/deck/:id` | **Private** | `DeckView` | List view of cards in a specific deck. |
 | `/deck/:id/study`| **Private** | `StudyMode` | Active flashcard session interface. |
@@ -72,19 +74,24 @@ The application uses client-side routing (React Router).
 ---
 
 ## 6. UI/UX Design System
+The application now features a clean, minimalistic Notion-like layout with a refined blue-gray color palette and subtle interactive elements.
 
 ### 6.1 Color Palette
-A warm, high-contrast palette designed for readability.
+A clean, minimalistic Notion-inspired palette focusing on neutrals with a subtle blue accent.
 
 | Color | Hex | Semantic Role | Usage |
 | :--- | :--- | :--- | :--- |
-| **Cream** | `#FAF3E1` | **Background** | Global app background. |
-| **Sand** | `#F5E7C6` | **Surface** | Flashcard background, input fields, containers. |
-| **Orange** | `#FF6D1F` | **Primary / Accent** | Call-to-Action buttons, active links, highlights. |
-| **Black** | `#222222` | **Text / Ink** | All typography and icons. |
+| **Primary** | `#37352F` | **Dark Text / Elements** | Main text, primary headings. |
+| **Accent** | `#228BE6` | **Accent / Links** | Links, primary buttons, active states. |
+| **Accent Light** | `#74C0FC` | **Lighter Accent** | Subtle highlights, hover states. |
+| **Background** | `#F7F7F7` | **Global Background** | Main application background. |
+| **Surface** | `#FFFFFF` | **Card / Input Background** | Flashcard background, input fields, containers. |
+| **Text Medium** | `#787774` | **Secondary Text** | Descriptions, less prominent text. |
+| **Border** | `#E0E0E0` | **Subtle Borders** | Element separators, input borders. |
+| **Error** | `#A05252` | **Subdued Error** | Error messages, danger actions. |
 
 ### 6.2 Typography
-* **Primary Font:** Inter, Roboto, or System Sans-Serif (Clean, legible).
+* **Primary Font:** Inter (Clean, legible, Notion-like).
 * **Code Font:** Fira Code or Monospace (for code blocks inside flashcards).
 
 ---
@@ -119,6 +126,7 @@ A warm, high-contrast palette designed for readability.
 * `POST /auth/login`
 * `GET /decks` (List decks)
 * `POST /decks` (Create deck)
+* `PUT /decks/{id}` (Update deck)
 * `GET /decks/{id}/cards` (Get cards for study)
 * `POST /cards` (Create card)
 * `PUT /cards/{id}/review` (Submit study result)

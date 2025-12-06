@@ -34,7 +34,7 @@ const CreateDeck = () => {
   };
 
   return (
-    <div className="create-deck-page">
+    <div className="page-container create-deck-page">
       <h1>Create New Deck</h1>
       <form onSubmit={handleSubmit}>
         {error && <p className="error-message">{error}</p>}

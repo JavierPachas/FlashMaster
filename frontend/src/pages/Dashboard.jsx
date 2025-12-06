@@ -12,6 +12,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchDecks = async () => {
+      console.log("Fetching decks with token:", token);
       try {
         const response = await axios.get('http://localhost:8000/decks/', {
           headers: {
@@ -53,38 +54,33 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return <div>Loading decks...</div>;
+    return <div className="page-container">Loading decks...</div>;
   }
 
   return (
-    <div className="dashboard">
-      <header>
-        <h1>Your Decks</h1>
-        <button onClick={logout} className="button secondary">Logout</button>
-      </header>
+    <div className="page-container dashboard">
+      <h1>Your Decks</h1>
       <section className="deck-list">
         {error && <p className="error-message">{error}</p>}
-        {decks.length === 0 ? (
-          <p>No decks yet. <Link to="/create-deck">Create one!</Link></p>
-        ) : (
-          <div className="decks-grid">
-            {decks.map((deck) => (
-              <div key={deck.id} className="deck-card">
-                <h2>{deck.title}</h2>
-                <p>{deck.description}</p>
-                <div className="deck-actions">
-                  <Link to={`/deck/${deck.id}`} className="button primary">View Cards</Link>
-                  <Link to={`/deck/${deck.id}/study`} className="button secondary">Study</Link>
-                  <button onClick={() => handleDelete(deck.id)} className="button danger">Delete</button>
-                </div>
+        <div className="decks-grid">
+          {decks.map((deck) => (
+            <div key={deck.id} className="deck-card">
+              <h2>{deck.title}</h2>
+              <p>{deck.description}</p>
+              <p className="deck-created-at">Created: {new Date(deck.created_at).toLocaleDateString()}</p>
+              <div className="deck-actions">
+                <Link to={`/deck/${deck.id}`} className="button primary">View Cards</Link>
+                <Link to={`/deck/${deck.id}/study`} className="button secondary">Study</Link>
+                <button onClick={() => handleDelete(deck.id)} className="button danger">Delete</button>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+          <Link to="/create-deck" className="deck-card new-deck-card">
+            <h2>+ Create New Deck</h2>
+            <p>Start building your knowledge base.</p>
+          </Link>
+        </div>
       </section>
-      <div className="create-deck-section">
-        <Link to="/create-deck" className="button primary">Create New Deck</Link>
-      </div>
     </div>
   );
 };

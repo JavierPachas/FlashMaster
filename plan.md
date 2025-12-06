@@ -38,10 +38,12 @@ This document outlines the plan to implement the FlashMaster web application as 
   - **Decks (`/decks`):**
     - `GET /decks`: List all decks for the authenticated user.
     - `POST /decks`: Create a new deck.
+    - `PUT /decks/{id}`: Update a deck.
     - `DELETE /decks/{id}`: Delete a deck.
   - **Cards (`/cards`):**
     - `GET /decks/{id}/cards`: Get all cards for a specific deck.
     - `POST /cards`: Create a new card.
+    - `POST /decks/{id}/cards/upload`: Upload cards via CSV.
     - `PUT /cards/{id}`: Update a card.
     - `DELETE /cards/{id}`: Delete a card.
   - **Study (`/review`):**
@@ -74,17 +76,22 @@ This document outlines the plan to implement the FlashMaster web application as 
   - **Authentication:**
     - Create login and registration forms.
     - Implement logic to store the JWT in local storage and manage the user's authentication state.
+    - Redirect logged-in users from Landing Page to Dashboard.
   - **Dashboard:**
     - Fetch and display a list of the user's decks.
+    - Implement a "New Deck" card to create new decks.
   - **Deck View:**
     - Fetch and display the cards for a specific deck.
     - Allow adding, editing, and deleting cards.
+    - Implement CSV upload functionality.
+    - Allow editing deck title and description.
   - **Study Mode:**
     - Fetch cards for a study session.
     - Implement the flashcard reveal and self-grading UI.
     - Send review results to the backend.
 - **Styling:**
-  - Use CSS Modules or a CSS-in-JS library to style the application according to the PRD's color palette and typography.
+  - Implemented a clean, minimalistic Notion-like layout with a refined blue-gray color palette.
+  - Improved button styling and removed underlines on hover.
 
 ## 4. Testing
 

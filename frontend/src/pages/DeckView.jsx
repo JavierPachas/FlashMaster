@@ -13,6 +13,10 @@ const DeckView = () => {
   const [newCardFront, setNewCardFront] = useState('');
   const [newCardBack, setNewCardBack] = useState('');
   const [editingCard, setEditingCard] = useState(null); // Stores the card being edited
+  const [csvFile, setCsvFile] = useState(null);
+  const [isEditingDeck, setIsEditingDeck] = useState(false);
+  const [editedDeckTitle, setEditedDeckTitle] = useState('');
+  const [editedDeckDescription, setEditedDeckDescription] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +26,8 @@ const DeckView = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setDeck(deckResponse.data);
+        setEditedDeckTitle(deckResponse.data.title);
+        setEditedDeckDescription(deckResponse.data.description);
 
         const cardsResponse = await axios.get(`http://localhost:8000/decks/${id}/cards/`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -103,20 +109,108 @@ const DeckView = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    setCsvFile(e.target.files[0]);
+  };
+
+  const handleUploadCsv = async (e) => {
+    e.preventDefault();
+    setError('');
+    if (!csvFile) {
+      setError('Please select a CSV file to upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', csvFile);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/decks/${id}/cards/upload`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      setCards([...cards, ...response.data]);
+      setCsvFile(null);
+      alert('Cards uploaded successfully!');
+    } catch (err) {
+      setError('Failed to upload CSV file.');
+      console.error('Upload CSV error:', err);
+      if (err.response && err.response.status === 401) {
+        logout();
+      }
+    }
+  };
+
+  const handleUpdateDeck = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const response = await axios.put(
+        `http://localhost:8000/decks/${id}`,
+        { title: editedDeckTitle, description: editedDeckDescription },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setDeck(response.data);
+      setIsEditingDeck(false);
+    } catch (err) {
+      setError('Failed to update deck.');
+      console.error('Update deck error:', err);
+      if (err.response && err.response.status === 401) {
+        logout();
+      }
+    }
+  };
+
   if (loading) {
-    return <div>Loading deck...</div>;
+    return <div className="page-container">Loading deck...</div>;
   }
 
   if (!deck) {
-    return <div>Deck not found.</div>;
+    return <div className="page-container">Deck not found.</div>;
   }
 
   return (
-    <div className="deck-view">
+    <div className="page-container deck-view">
       <header>
-        <h1>{deck.title}</h1>
-        <p>{deck.description}</p>
-        <Link to="/dashboard" className="button secondary">Back to Dashboard</Link>
+        {isEditingDeck ? (
+          <form onSubmit={handleUpdateDeck} className="edit-deck-form">
+            <div className="form-group">
+              <label htmlFor="edit-deck-title">Title:</label>
+              <input
+                type="text"
+                id="edit-deck-title"
+                value={editedDeckTitle}
+                onChange={(e) => setEditedDeckTitle(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="edit-deck-description">Description:</label>
+              <textarea
+                id="edit-deck-description"
+                value={editedDeckDescription}
+                onChange={(e) => setEditedDeckDescription(e.target.value)}
+              ></textarea>
+            </div>
+            <button type="submit" className="button primary">Save Changes</button>
+            <button type="button" onClick={() => setIsEditingDeck(false)} className="button secondary">Cancel</button>
+          </form>
+        ) : (
+          <>
+            <h1>{deck.title}</h1>
+            <p>{deck.description}</p>
+            <p className="deck-created-at">Created: {new Date(deck.created_at).toLocaleDateString()}</p>
+            <button onClick={() => setIsEditingDeck(true)} className="button secondary">Edit Deck</button>
+          </>
+        )}
         <Link to={`/deck/${deck.id}/study`} className="button primary">Start Study</Link>
       </header>
 
@@ -162,7 +256,7 @@ const DeckView = () => {
       </section>
 
       <section className="add-card-form">
-        <h2>Add New Card</h2>
+        <h2>Add New Card Manually</h2>
         <form onSubmit={handleAddCard}>
           <div className="form-group">
             <label htmlFor="new-card-front">Front:</label>
@@ -185,6 +279,23 @@ const DeckView = () => {
           </div>
           <button type="submit" className="button primary">Add Card</button>
         </form>
+      </section>
+
+      <section className="upload-csv-section">
+        <h2>Upload Cards from CSV</h2>
+        <form onSubmit={handleUploadCsv}>
+          <div className="form-group">
+            <label htmlFor="csv-file">Select CSV File:</label>
+            <input
+              type="file"
+              id="csv-file"
+              accept=".csv"
+              onChange={handleFileChange}
+            />
+          </div>
+          <button type="submit" className="button primary" disabled={!csvFile}>Upload CSV</button>
+        </form>
+        <p>CSV file should have two columns: "front" and "back".</p>
       </section>
     </div>
   );

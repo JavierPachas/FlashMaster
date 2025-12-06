@@ -21,7 +21,8 @@ const StudyMode = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("Fetched cards:", response.data);
-        const dueCards = response.data; // All cards are immediately available for study
+        // All cards are immediately available for study
+        const dueCards = response.data; 
         console.log("Due cards:", dueCards);
         setCards(dueCards);
       } catch (err) {
@@ -73,14 +74,14 @@ const StudyMode = () => {
   };
 
   if (loading) {
-    return <div>Loading cards...</div>;
+    return <div className="page-container">Loading cards...</div>;
   }
 
   if (cards.length === 0) {
     return (
-      <div className="study-mode">
+      <div className="page-container study-mode">
         <h1>Study Session</h1>
-        <p>No cards due for review in this deck. <Link to={`/deck/${id}`}>Add more cards</Link> or come back later!</p>
+        <p>No cards in this deck yet. <Link to={`/deck/${id}`}>Add more cards</Link> to start studying!</p>
         <Link to={`/deck/${id}`} className="button secondary">Back to Deck</Link>
       </div>
     );
@@ -89,7 +90,7 @@ const StudyMode = () => {
   const currentCard = cards[currentCardIndex];
 
   return (
-    <div className="study-mode">
+    <div className="page-container study-mode">
       <h1>Study Session</h1>
       {error && <p className="error-message">{error}</p>}
       <div className="flashcard">
@@ -115,3 +116,5 @@ const StudyMode = () => {
 };
 
 export default StudyMode;
+
+

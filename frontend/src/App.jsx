@@ -9,48 +9,55 @@ import DeckView from './pages/DeckView'
 import StudyMode from './pages/StudyMode'
 import NotFound from './pages/NotFound'
 import PrivateRoute from './components/PrivateRoute'
+import Navbar from './components/Navbar' // Import Navbar
 
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/create-deck"
-          element={
-            <PrivateRoute>
-              <CreateDeck />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/deck/:id"
-          element={
-            <PrivateRoute>
-              <DeckView />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/deck/:id/study"
-          element={
-            <PrivateRoute>
-              <StudyMode />
-            </PrivateRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Navbar /> {/* Add Navbar here */}
+      <div className="page-content"> {/* Wrap routes in a content div */}
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/create-deck"
+            element={
+              <PrivateRoute>
+                <CreateDeck />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/deck/:id"
+            element={
+              <PrivateRoute>
+                <DeckView />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/deck/:id/study"
+            element={
+              <PrivateRoute>
+                <StudyMode />
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+      <footer className="app-footer">
+        <p>&copy; 2025 FlashMaster. All rights reserved.</p>
+      </footer>
     </div>
   )
 }

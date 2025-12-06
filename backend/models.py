@@ -20,6 +20,7 @@ class Deck(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     title = Column(String, index=True)
     description = Column(Text)
+    created_at = Column(TIMESTAMP, server_default=text("CURRENT_TIMESTAMP")) # Add created_at here
 
     owner = relationship("User", back_populates="decks")
     cards = relationship("Card", back_populates="deck")
