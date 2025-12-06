@@ -60,6 +60,19 @@ To run FlashMaster locally, ensure you have Docker and Docker Compose installed.
 
 Contributions are welcome! Please feel free to submit a Pull Request or open an Issue.
 
+## Images
+
+<img width="844" height="514" alt="image" src="https://github.com/user-attachments/assets/5f60fd9f-c5cb-4713-9fc2-85874aa4c401" />
+
+<img width="867" height="527" alt="image" src="https://github.com/user-attachments/assets/e4414220-e128-4f0d-9d48-d1064f8920f5" />
+
+<img width="844" height="508" alt="image" src="https://github.com/user-attachments/assets/e11ece14-9c13-490a-89fc-9b48f81b2a34" />
+
+<img width="750" height="504" alt="image" src="https://github.com/user-attachments/assets/850af1dc-a465-41bd-bb4f-12b750251cd9" />
+
+<img width="751" height="608" alt="image" src="https://github.com/user-attachments/assets/1e1275da-e8e5-4836-8f73-1971080ca4da" />
+
+
 ## License
 
 This project is licensed under the MIT License.
