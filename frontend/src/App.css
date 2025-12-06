@@ -1,0 +1,143 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+header {
+  background-color: #F5E7C6; /* Sand */
+  padding: 1em;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 2em;
+}
+
+header h1 {
+  color: #FF6D1F; /* Orange */
+}
+
+.landing-page, .auth-page, .dashboard, .create-deck-page, .deck-view, .study-mode {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #FAF3E1; /* Cream */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cta-buttons a {
+  margin: 0 10px;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  margin-bottom: 0.5em;
+}
+
+.deck-list {
+  margin-top: 2em;
+}
+
+.decks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.deck-card {
+  background-color: #F5E7C6; /* Sand */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.deck-card h2 {
+  color: #FF6D1F; /* Orange */
+  margin-top: 0;
+}
+
+.deck-actions button, .deck-actions a {
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.create-deck-section {
+  margin-top: 2em;
+}
+
+.card-list {
+  margin-top: 2em;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.card-item {
+  background-color: #F5E7C6; /* Sand */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.card-item p {
+  margin: 0.5em 0;
+}
+
+.card-actions button {
+  margin-right: 5px;
+  margin-top: 10px;
+}
+
+.flashcard {
+  background-color: #F5E7C6; /* Sand */
+  border: 1px solid #FF6D1F; /* Orange */
+  border-radius: 10px;
+  padding: 40px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 500px;
+}
+
+.card-content {
+  margin-bottom: 20px;
+}
+
+.card-front {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: #222222;
+}
+
+.card-back {
+  font-size: 1.5em;
+  color: #FF6D1F;
+  margin-top: 15px;
+}
+
+.grade-buttons button {
+  margin: 0 10px;
+}
